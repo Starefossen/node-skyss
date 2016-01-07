@@ -72,3 +72,51 @@ module.exports.mobile.stop = function stop(id, opts, cb) {
 
   jsonist.get(url, module.exports._opts(), cb);
 };
+
+/**
+ * Get list of transport routes
+ *
+ * @param opts - query options {rows=1000, q=undefined}
+ * @param cb - callback function (err, data, res)
+ *
+ * @return Object with routes
+ */
+module.exports.mobile.routes = function routes(opts, cb) {
+  const qs = opts;
+
+  qs.rows = qs.rows || 1000;
+
+  if (qs.q) { qs.q = encodeURIComponent(qs.q); }
+
+  const url = `${skyssMobileApiUrl}/routedirections?${querystring.stringify(qs)}`;
+  jsonist.get(url, module.exports._opts(), cb);
+};
+
+
+/**
+ * Get transport route details
+ *
+ * @param id - String with route identifier
+ * @param opts - Object with query options {from, expand}
+ *    from=12016444
+ *    expand=StopPassingTimes.StopLocation
+ *    expand=Path
+ * @param cb - callback function (err, data, res)
+ *
+ * @return Object with route details
+ */
+module.exports.mobile.route = function route(id, opts, cb) {
+  let url = `${skyssMobileApiUrl}/trips?RouteDirectionIdentifier=${id}`;
+
+  if (Object.keys(opts).length) {
+    if (opts.expand) {
+      url += `&expand=${opts.expand.join('&expand=')}`;
+    }
+
+    if (opts.from) {
+      url += `&FromStop=${opts.from}`;
+    }
+  }
+
+  jsonist.get(url, module.exports._opts(), cb);
+};

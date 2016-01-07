@@ -153,3 +153,116 @@ describe('stop()', function describe() {
     });
   });
 });
+
+describe('routes()', function describe() {
+  it('returns a list of routes', function it(done) {
+    this.timeout(10000);
+
+    const opts = {
+      rows: 10,
+    };
+
+    skyss.mobile.routes(opts, (err, data, resp) => {
+      assert.ifError(err);
+      assert.equal(resp.statusCode, 200);
+
+      const schema = Joi.object().keys({
+        Result: Joi.object().keys({
+          Found: Joi.number(),
+          Returned: Joi.number(),
+          Start: Joi.number(),
+        }),
+        RouteDirections: Joi.array().items(Joi.object().keys({
+          PublicIdentifier: Joi.string(),
+          Description: Joi.string(),
+          Direction: Joi.string(),
+          DirectionName: Joi.string(),
+          ServiceMode: Joi.string(),
+          Identifier: Joi.string(),
+        })),
+        resultCode: Joi.string(),
+        errorCode: Joi.string().allow(null),
+        errorMessage: Joi.string().allow(null),
+      });
+
+      Joi.validate(data, schema, done);
+    });
+  });
+
+  it('returns a list of routes for search query');
+});
+
+describe('route()', function describe() {
+  it('returns details for route', function it(done) {
+    this.timeout(10000);
+
+    const id = '000001_0_Direction1';
+    const opts = {};
+
+    skyss.mobile.route(id, opts, (err, data, resp) => {
+      assert.ifError(err);
+      assert.equal(resp.statusCode, 200);
+
+      const schema = Joi.object().keys({
+        Trips: Joi.array().items(Joi.object().keys({
+          Identifier: Joi.string(),
+          TripServiceMode: Joi.string(),
+          RoutePublicIdentifier: Joi.string(),
+          RouteDirectionName: Joi.string(),
+          StopPassingTimes: Joi.array().items(Joi.object().keys({
+            StopIdentifier: Joi.string(),
+            StopDescription: Joi.string(),
+            Timestamp: Joi.date(),
+            Status: Joi.string(),
+            DisplayTime: Joi.string(),
+            TimeOffset: Joi.string(),
+          })),
+        })),
+        resultCode: Joi.string(),
+        errorCode: Joi.string().allow(null),
+        errorMessage: Joi.string().allow(null),
+      });
+
+      Joi.validate(data, schema, done);
+    });
+  });
+
+  it('returns details for route with expanded fields', function it(done) {
+    const id = '000001_0_Direction1';
+    const opts = {
+      expand: [
+        'StopPassingTimes.StopLocation',
+        'Path',
+      ],
+    };
+
+    skyss.mobile.route(id, opts, (err, data, resp) => {
+      assert.ifError(err);
+      assert.equal(resp.statusCode, 200);
+
+      const schema = Joi.object().keys({
+        Trips: Joi.array().items(Joi.object().keys({
+          Identifier: Joi.string(),
+          TripServiceMode: Joi.string(),
+          RoutePublicIdentifier: Joi.string(),
+          RouteDirectionName: Joi.string(),
+          StopPassingTimes: Joi.array().items(Joi.object().keys({
+            StopIdentifier: Joi.string(),
+            StopDescription: Joi.string(),
+            Timestamp: Joi.date(),
+            Status: Joi.string(),
+            DisplayTime: Joi.string(),
+            TimeOffset: Joi.string(),
+            StopLocation: Joi.string(),
+          })),
+          Path: Joi.array().items(Joi.string()),
+        })),
+        resultCode: Joi.string(),
+        errorCode: Joi.string().allow(null),
+        errorMessage: Joi.string().allow(null),
+      });
+
+      Joi.validate(data, schema, done);
+    });
+  });
+});
