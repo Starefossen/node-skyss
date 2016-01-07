@@ -1,0 +1,42 @@
+{
+  "name": "skyss",
+  "version": null,
+  "description": "Node.JS wrapper of various (undocumented) Skyss APIs",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js test/",
+    "test": "mocha -c --check-leaks -R tap test/",
+    "watch": "mocha -w -b -c --check-leaks -R progress test/",
+    "semantic-release": "semantic-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Starefossen/node-skyss.git"
+  },
+  "keywords": [
+    "skyss",
+    "skyss.no",
+    "API",
+    "Travel",
+    "Route"
+  ],
+  "author": "Hans Kristian Flaatten <hans@starefossen.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Starefossen/node-skyss/issues"
+  },
+  "homepage": "https://github.com/Starefossen/node-skyss#readme",
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "dependencies": {
+    "jsonist": "^1.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^3.0.2",
+    "joi": "^7.1.0",
+    "mocha": "^2.3.4",
+    "semantic-release": "^4.3.5"
+  }
+}
